@@ -1,0 +1,57 @@
+# .agentignore — personal-context blocklist for framework/
+#
+# Lives at: personal/.agentignore
+# Read by:  framework/agent/scripts/check-context.sh (called from pre-commit)
+#
+# SYNTAX (gitignore-aligned):
+#
+#   foo/                  → PATH pattern. Files under this path are EXEMPT
+#                            from scanning. Use for real infrastructure refs
+#                            (vendor dirs, font names in code, MCP tool IDs).
+#
+#   !word                 → WORD pattern. If this string appears in any
+#                            non-exempt framework/ file, the commit is
+#                            BLOCKED. Case-insensitive substring match.
+#
+#   # comment             → ignored
+#
+#   <blank>               → ignored
+#
+# Inline override (on the content line, not in this file):
+#   <content> # context-allow:<reason>
+#                         → that one line is skipped from the scan.
+#
+# ─────────────────────────────────────────────────────────────────────────
+# EXEMPT PATHS — files in these paths are not scanned
+# ─────────────────────────────────────────────────────────────────────────
+
+# Vendor infrastructure (MCP server collection — genuinely vendor-coupled)
+framework/mcp/servers/
+
+# Pptx skill — legitimate references to brand fonts ("Clean") in code
+framework/skills/pptx/
+
+# Vendor dirs and lockfiles never need scanning
+node_modules/
+package-lock.json
+package.json
+
+# Binary assets
+SCREENSHOT.jpg
+
+# ─────────────────────────────────────────────────────────────────────────
+# FLAG WORDS — these MUST NOT appear in non-exempt framework/ files
+# ─────────────────────────────────────────────────────────────────────────
+
+# Your personal identifiers
+# !<your-first-name>
+# !<your-username>
+# !@<your-username>
+
+# Customer names (add as engagements happen — the `agentignore` skill
+# can help curate this list)
+# !<customer-name>
+# !<contact-first-name> <contact-last-name>
+
+# Internal product codes / project codenames
+# !<internal-product-code>

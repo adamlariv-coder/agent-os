@@ -1,0 +1,6 @@
+# Large source files — drop here for Claude to parse, not tracked in git
+knowledge/resources/files/*
+!knowledge/resources/files/.gitkeep
+
+# Agent scratch space
+agent/scratch/

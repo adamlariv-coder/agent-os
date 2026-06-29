@@ -1,0 +1,39 @@
+#!/bin/bash
+# Commit-msg hook: enforces protected zone discipline.
+# Blocks commits touching memory/ or instructions/ unless the commit
+# message contains the [CONFIRM MEMORY UPDATE] token.
+
+PROTECTED_PATHS=("personal/memory/" "framework/instructions/")
+CONFIRM_TOKEN="[CONFIRM MEMORY UPDATE]"
+COMMIT_MSG_FILE="$1"
+
+staged_protected=()
+for path in "${PROTECTED_PATHS[@]}"; do
+  while IFS= read -r file; do
+    staged_protected+=("$file")
+  done < <(git diff --cached --name-only | grep "^$path")
+done
+
+if [ ${#staged_protected[@]} -eq 0 ]; then
+  exit 0
+fi
+
+if grep -qF "$CONFIRM_TOKEN" "$COMMIT_MSG_FILE"; then
+  exit 0
+fi
+
+echo ""
+echo "┌─────────────────────────────────────────────────────────────────┐"
+echo "│  PROTECTED ZONE — commit blocked                                │"
+echo "└─────────────────────────────────────────────────────────────────┘"
+echo ""
+echo "You are attempting to commit changes to protected files:"
+for file in "${staged_protected[@]}"; do
+  echo "  - $file"
+done
+echo ""
+echo "Include this exact string in your commit message and try again:"
+echo ""
+echo "  $CONFIRM_TOKEN"
+echo ""
+exit 1

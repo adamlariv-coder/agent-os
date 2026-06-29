@@ -1,0 +1,4 @@
+#!/bin/bash
+# Post-commit hook: placeholder for future changelog automation.
+# Currently a no-op. Can be extended to auto-append to knowledge/changelog.md.
+exit 0

@@ -1,0 +1,8 @@
+# Python dependencies for framework tools and skills
+# Install: pip3 install -r framework/requirements.txt
+
+# File parsing — knowledge extraction from PPTX, PDF, DOCX, etc.
+markitdown
+
+# PPTX skill — reading and inspecting PowerPoint files
+python-pptx

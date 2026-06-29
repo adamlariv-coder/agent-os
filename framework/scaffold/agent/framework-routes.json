@@ -1,0 +1,67 @@
+{
+  "routes": [
+    {
+      "triggers": ["workspace taxonomy", "structure", "how is this organized", "taxonomy", "workspace organization"],
+      "load": "framework/knowledge/taxonomy.md",
+      "also": ["framework/knowledge/setup-guide.md"],
+      "type": "framework-knowledge"
+    },
+    {
+      "triggers": ["past decisions", "architectural decision", "decisions log", "why was this built"],
+      "load": "framework/knowledge/decisions-log.md",
+      "type": "framework-knowledge"
+    },
+    {
+      "triggers": ["what changed", "changelog", "recent changes"],
+      "load": "framework/knowledge/changelog.md",
+      "type": "framework-knowledge"
+    },
+    {
+      "triggers": ["skill authoring", "write a skill", "create a skill", "skill frontmatter", "skill template"],
+      "load": "framework/knowledge/skill-authoring.md",
+      "type": "framework-knowledge"
+    },
+    {
+      "triggers": ["install a skill", "skill from external source", "skill registry"],
+      "load": "framework/skills/install.sh",
+      "also": ["framework/skills/registry.json"],
+      "type": "framework-skill"
+    },
+    {
+      "triggers": ["MCP server", "MCP utility", "mcp"],
+      "load": "framework/mcp/INDEX.md",
+      "also": ["framework/knowledge/mcp-index.md"],
+      "type": "mcp"
+    },
+    {
+      "triggers": ["workspace setup", "rebuild from scratch", "setup guide", "first time setup"],
+      "load": "framework/knowledge/setup-guide.md",
+      "type": "framework-knowledge"
+    },
+    {
+      "triggers": ["agent rules", "constraints", "global rules", "behavioral rules"],
+      "load": "framework/instructions/global.md",
+      "type": "instruction"
+    },
+    {
+      "triggers": ["context protocol", "saving context", "dump context", "context management"],
+      "load": "framework/instructions/global.md",
+      "type": "instruction"
+    },
+    {
+      "triggers": ["user preferences", "communication style", "style preferences"],
+      "load": "personal/memory/core/preferences.md",
+      "type": "memory"
+    },
+    {
+      "triggers": ["project context", "stakeholders", "project memory", "mounted project"],
+      "load": "personal/knowledge/memory-index.md",
+      "type": "memory"
+    },
+    {
+      "triggers": ["refresh resources", "refresh knowledge", "fetch saved links", "save resource", "add link", "add resource", "resources index"],
+      "load": "personal/knowledge/resources.md",
+      "type": "resources"
+    }
+  ]
+}

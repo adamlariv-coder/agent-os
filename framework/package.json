@@ -1,0 +1,19 @@
+{
+  "name": "agentos-framework",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Node dependencies for AgentOS framework skills",
+  "dependencies": {
+    "markdown-it": "^14.2.0",
+    "pptxgenjs": "^3.12.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-icons": "^5.0.0",
+    "sharp": "^0.33.0"
+  },
+  "notes": {
+    "markdown-it": "prd skill — converting Markdown PRD drafts to Confluence storage format",
+    "pptxgenjs": "pptx skill — creating and editing PowerPoint files",
+    "react + react-dom + react-icons + sharp": "pptx skill — rendering React components to images for slides"
+  }
+}

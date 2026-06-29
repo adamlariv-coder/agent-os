@@ -1,0 +1,37 @@
+# Environment and secrets
+.workspace/config/*.env
+!.workspace/config/.env.example
+
+# Personal layer — managed as a separate private git repo
+personal/
+
+# Claude Code local state — sessions, cache, telemetry, worktrees
+.claude/
+
+# Agent scratch space
+.workspace/scratch/
+
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+
+# Cloned external MCP server collections — referenced by path, not committed
+framework/mcp/servers/*/
+npm-debug.log*
+
+# MCP server runtime logs (emitted by servers in cwd)
+mcp-server.log
+*-mcp-server.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Unpacked PPTX working directories
+unpacked/
+*.pptx.bak

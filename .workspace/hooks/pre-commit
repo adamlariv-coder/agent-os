@@ -1,0 +1,37 @@
+#!/bin/bash
+# Pre-commit hook
+#
+# Two checks, in order:
+#   1. Personal-context leakage in framework/ — HARD BLOCK if found.
+#      Driven by personal/.agentignore (gitignore-style syntax) and
+#      framework/agent/scripts/check-context.sh.
+#   2. Staged protected-zone files (memory/, instructions/) — soft warn.
+#      The hard check happens in the commit-msg hook (token enforcement).
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+# ── 1. Personal-context scan (hard block) ────────────────────────────────────
+CHECK_SCRIPT="$REPO_ROOT/framework/agent/scripts/check-context.sh"
+if [ -x "$CHECK_SCRIPT" ]; then
+  "$CHECK_SCRIPT" || exit 1
+fi
+
+# ── 2. Protected-zone soft warn ──────────────────────────────────────────────
+PROTECTED_PATHS=("memory/" "instructions/")
+
+staged_protected=()
+for path in "${PROTECTED_PATHS[@]}"; do
+  while IFS= read -r file; do
+    staged_protected+=("$file")
+  done < <(git diff --cached --name-only | grep "^$path")
+done
+
+if [ ${#staged_protected[@]} -gt 0 ]; then
+  echo ""
+  echo "Note: You are committing changes to protected files."
+  echo "Your commit message must contain: [CONFIRM MEMORY UPDATE]"
+  echo "This will be verified by the commit-msg hook."
+  echo ""
+fi
+
+exit 0
