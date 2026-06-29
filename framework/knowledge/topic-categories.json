@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "description": "Canonical topic categories for personal/knowledge/topics/. Used by build-index.sh, route.sh, and the topic-categories skill.",
+  "categories": {
+    "ecp": {
+      "label": "ECP",
+      "description": "Execution Control Protocol — workflow runtime, architecture, and platform direction",
+      "aliases": ["execution control protocol", "ecp topics", "workflow protocol", "ecp platform"],
+      "prefixes": ["ecp-"]
+    },
+    "ecp-design-intelligence": {
+      "label": "ECP Design Intelligence",
+      "description": "CreativeDocument layer, Pixi renderer, brand-safe creative automation on ECP",
+      "aliases": ["design intelligence", "creative document", "ecp design", "creative automation"],
+      "prefixes": ["ecp-design-intelligence-"]
+    },
+    "personal-finance": {
+      "label": "Personal Finance",
+      "description": "Investment strategy, tax, real estate, employer equity, liquidity planning",
+      "aliases": ["finance", "investment strategy", "personal finance topics", "rrsp", "tfsa"],
+      "prefixes": ["personal-finance"]
+    },
+    "rockbound-digital": {
+      "label": "Rockbound Digital",
+      "description": "Consulting business — website, SEO, content, and go-to-market",
+      "aliases": ["rockbound", "rockbound digital", "calgary consulting"],
+      "prefixes": ["rockbound-"]
+    },
+    "scoper": {
+      "label": "Scoper",
+      "description": "Delivery intelligence product — scope, risk, and governed workflows",
+      "aliases": ["scoper product", "scope risk", "delivery intelligence"],
+      "prefixes": ["scoper-"]
+    },
+    "personal": {
+      "label": "Personal",
+      "description": "Cross-cutting identity, career context, and agent grounding (not finance-specific)",
+      "aliases": ["personal context", "identity brief", "career context"],
+      "prefixes": ["personal-context-"]
+    }
+  }
+}
