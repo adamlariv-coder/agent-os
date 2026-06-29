@@ -35,8 +35,8 @@
     "personal": {
       "label": "Personal",
       "description": "Cross-cutting identity, career context, and agent grounding (not finance-specific)",
-      "aliases": ["personal context", "identity brief", "career context"],
-      "prefixes": ["personal-context-"]
+      "aliases": ["personal context", "identity brief", "career context", "resume", "cv"],
+      "prefixes": ["personal-context-", "resume-"]
     }
   }
 }
