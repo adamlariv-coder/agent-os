@@ -6,28 +6,60 @@
 REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
 TOPICS_DIR="$REPO_ROOT/personal/knowledge/topics"
 TOPICS_INDEX="$REPO_ROOT/personal/agent/topics-index.json"
+KNOWLEDGE_INDEX="$REPO_ROOT/personal/knowledge/INDEX.md"
+CATEGORIES_PATH="$REPO_ROOT/framework/knowledge/topic-categories.json"
 MANIFEST="$REPO_ROOT/personal/agent/routing-manifest.json"
 FRAMEWORK_ROUTES="$REPO_ROOT/personal/agent/framework-routes.json"
 REGISTRY="$REPO_ROOT/framework/skills/registry.json"
 PERSONAL_REGISTRY="$REPO_ROOT/personal/skills/registry.json"
 
-python3 - "$TOPICS_DIR" "$TOPICS_INDEX" "$MANIFEST" "$FRAMEWORK_ROUTES" "$REGISTRY" "$PERSONAL_REGISTRY" << 'PYEOF'
+python3 - "$TOPICS_DIR" "$TOPICS_INDEX" "$KNOWLEDGE_INDEX" "$CATEGORIES_PATH" "$MANIFEST" "$FRAMEWORK_ROUTES" "$REGISTRY" "$PERSONAL_REGISTRY" << 'PYEOF'
 import sys, os, re, json
 from datetime import date
 
 topics_dir             = sys.argv[1]
 topics_out             = sys.argv[2]
-manifest_out           = sys.argv[3]
-framework_routes_path  = sys.argv[4]
-registry_path          = sys.argv[5]
-personal_registry_path = sys.argv[6]
+knowledge_index_out    = sys.argv[3]
+categories_path        = sys.argv[4]
+manifest_out           = sys.argv[5]
+framework_routes_path  = sys.argv[6]
+registry_path          = sys.argv[7]
+personal_registry_path = sys.argv[8]
+
+def load_categories():
+    if not os.path.exists(categories_path):
+        return {}
+    with open(categories_path) as f:
+        return json.load(f).get("categories", {})
+
+categories = load_categories()
+
+def infer_category(fname):
+    base = fname.replace(".md", "")
+    candidates = []
+    for slug, meta in categories.items():
+        for prefix in meta.get("prefixes", []):
+            if base.startswith(prefix) or base == prefix:
+                candidates.append((len(prefix), slug))
+    if not candidates:
+        return None
+    candidates.sort(reverse=True)
+    return candidates[0][1]
 
 # ── 1. Build topics-index ──────────────────────────────────────────────────
 topics = {}
-for fname in sorted(os.listdir(topics_dir)):
-    if not fname.endswith(".md"):
-        continue
-    path = os.path.join(topics_dir, fname)
+
+def iter_topic_files(root):
+    for dirpath, _, filenames in os.walk(root):
+        for fname in sorted(filenames):
+            if fname.endswith(".md"):
+                full = os.path.join(dirpath, fname)
+                rel = os.path.relpath(full, root).replace("\\", "/")
+                yield rel
+
+for rel_path in iter_topic_files(topics_dir):
+    fname = os.path.basename(rel_path)
+    path = os.path.join(topics_dir, rel_path)
     with open(path) as f:
         raw = f.read()
 
@@ -49,21 +81,41 @@ for fname in sorted(os.listdir(topics_dir)):
     m = re.search(r'\*\*Tags\*\*:\s*(.+)', raw)
     if m: tags = [t.strip() for t in m.group(1).split(",")]
 
+    category = None
+    m = re.search(r'\*\*Category\*\*:\s*(\S+)', raw)
+    if m:
+        category = m.group(1).strip()
+    if not category:
+        category = infer_category(fname)
+    folder = os.path.dirname(rel_path)
+    if folder and folder != "." and not category:
+        category = folder
+    elif folder and folder != "." and category and category != folder:
+        print(f"  WARN: category/folder mismatch: {rel_path} (category={category}, folder={folder})")
+
     summary = ""
     in_header = True
+    skip_prefixes = ("**Tags**", "**Category**", "**Related topics**")
     for line in raw.splitlines():
         if in_header and (line.startswith(">") or line.startswith("#") or not line.strip()):
             continue
         in_header = False
-        if line.strip() and not line.startswith("#") and not line.startswith("|") and not line.startswith("-"):
-            summary = line.strip()[:120]
-            break
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or stripped.startswith("|") or stripped.startswith("-"):
+            continue
+        if any(stripped.startswith(p) for p in skip_prefixes):
+            continue
+        summary = stripped[:120]
+        break
 
-    topics[fname.replace(".md", "")] = {
-        "path": "personal/knowledge/topics/" + fname,
+    key = fname.replace(".md", "")
+    topics[key] = {
+        "path": "personal/knowledge/topics/" + rel_path,
         "title": title,
         "status": status,
         "updated": updated,
+        "category": category,
+        "folder": folder if folder != "." else "",
         "tags": tags,
         "summary": summary
     }
@@ -71,6 +123,47 @@ for fname in sorted(os.listdir(topics_dir)):
 with open(topics_out, "w") as f:
     json.dump({"topics": topics}, f, indent=2)
 print(f"topics-index: {len(topics)} topics")
+
+# ── 1b. Generate personal/knowledge/INDEX.md by category ───────────────────
+grouped = {}
+for key, topic in topics.items():
+    if topic["status"] == "archived":
+        continue
+    cat = topic.get("category") or "uncategorized"
+    grouped.setdefault(cat, []).append((key, topic))
+
+index_lines = [
+    "# Personal Knowledge Index",
+    "",
+    "Generated by `build-index.sh` — **do not edit by hand**.",
+    "Browse by category; use `bash framework/agent/scripts/list-topics.sh --category <slug>` for CLI.",
+    "",
+    f"**Topics**: {sum(len(v) for v in grouped.values())} active across {len(grouped)} categories",
+    "",
+]
+for cat in sorted(grouped.keys(), key=lambda c: (c == "uncategorized", categories.get(c, {}).get("label", c))):
+    meta = categories.get(cat, {})
+    label = meta.get("label", cat.replace("-", " ").title())
+    desc = meta.get("description", "")
+    index_lines += [f"## {label}", ""]
+    if desc:
+        index_lines.append(f"{desc}")
+        index_lines.append("")
+    for key, topic in sorted(grouped[cat], key=lambda x: x[0]):
+        title = topic.get("title", key)
+        updated = topic.get("updated") or "—"
+        summary = topic.get("summary", "")
+        folder = topic.get("folder", "")
+        loc = f"{folder}/" if folder else ""
+        index_lines.append(f"- **`{loc}{key}.md`** — {title} _(updated {updated})_")
+        if summary:
+            index_lines.append(f"  - {summary[:100]}")
+    index_lines.append("")
+
+os.makedirs(os.path.dirname(knowledge_index_out), exist_ok=True)
+with open(knowledge_index_out, "w") as f:
+    f.write("\n".join(index_lines))
+print(f"personal knowledge INDEX.md: {len(grouped)} categories")
 
 # ── 2. Build routing-manifest ──────────────────────────────────────────────
 routes = []
@@ -120,6 +213,13 @@ for key, topic in topics.items():
         continue
     triggers = [key.replace("-", " "), key]
     triggers += topic.get("tags", [])
+    cat = topic.get("category")
+    if cat:
+        triggers.append(cat)
+        triggers.append(cat.replace("-", " "))
+        cat_meta = categories.get(cat, {})
+        triggers.append(cat_meta.get("label", cat))
+        triggers += cat_meta.get("aliases", [])
     # add keywords from title words (lowercased, >3 chars)
     title_words = [w.lower() for w in re.findall(r'\b\w{4,}\b', topic["title"])]
     triggers += title_words

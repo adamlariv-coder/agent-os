@@ -11,6 +11,17 @@
       "needs": "framework/agent/scripts/check-context.sh (the scanner the pre-commit hook uses); git access to personal repo",
       "description": "Manages personal/.agentignore — the gitignore-style blocklist that powers the pre-commit personal-context check. The hook blocks any commit that would introduce a flagged term (customer names, personal identifiers, internal product codes) into a non-exempt framework/ file. This skill adds entries, exempts paths, runs on-demand audits, and is cued by upstream skills when a new customer appears.",
       "triggers": ["agentignore", ".agentignore", "context blocklist", "personal context blocklist", "block this term", "add to blocklist", "add to agentignore", "update blocklist", "audit blocklist", "audit context", "check context", "what's in the blocklist", "new customer", "track this customer"]
+    },
+    "topic-categories": {
+      "path": "framework/skills/topic-categories/SKILL.md",
+      "source": "local",
+      "type": "framework",
+      "version": "1.0.0",
+      "installed": "2026-06-29",
+      "model": "haiku",
+      "needs": "framework/knowledge/topic-categories.json; framework/agent/scripts/list-topics.sh; personal/agent/topics-index.json",
+      "description": "Organize and browse personal/knowledge/topics/ by domain category (ECP, Scoper, Rockbound, finance, etc.). Assign Category fields, list topics by bucket, and keep routing scoped as the topics directory grows.",
+      "triggers": ["topic categories", "topic category", "categorize topic", "recategorize topics", "list topics", "topics by category", "knowledge categories", "browse topics", "which topics are ecp"]
     }
   }
 }

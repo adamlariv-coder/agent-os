@@ -42,35 +42,36 @@ echo ""
 
 active=0; stale=0; archive_candidates=0; no_timestamp=0
 
-for file in "$TOPICS_DIR"/*.md; do
+while IFS= read -r file; do
   [ -f "$file" ] || continue
   name="$(basename "$file")"
+  rel="${file#$TOPICS_DIR/}"
   status=$(grep -m1 "^> status:" "$file" | grep -oE "active|archived|stale|needs-rebuild" | head -1)
   [ "$status" = "archived" ] && continue
 
   updated=$(extract_updated "$file")
 
   if [ -z "$updated" ]; then
-    echo "  NO TIMESTAMP: $name"
+    echo "  NO TIMESTAMP: $rel"
     no_timestamp=$((no_timestamp + 1)); continue
   fi
 
   updated_ts=$(parse_date "$updated")
-  [ -z "$updated_ts" ] && echo "  UNPARSEABLE DATE ($updated): $name" && continue
+  [ -z "$updated_ts" ] && echo "  UNPARSEABLE DATE ($updated): $rel" && continue
 
   days_old=$(( (TODAY - updated_ts) / 86400 ))
 
   if [ "$days_old" -ge "$ARCHIVE_DAYS" ]; then
-    echo "  ARCHIVE CANDIDATE ($days_old days): $name"
+    echo "  ARCHIVE CANDIDATE ($days_old days): $rel"
     archive_candidates=$((archive_candidates + 1))
   elif [ "$days_old" -ge "$STALE_DAYS" ]; then
-    echo "  STALE ($days_old days): $name"
+    echo "  STALE ($days_old days): $rel"
     stale=$((stale + 1))
   else
-    echo "  ok ($days_old days): $name"
+    echo "  ok ($days_old days): $rel"
     active=$((active + 1))
   fi
-done
+done < <(find "$TOPICS_DIR" -name "*.md" -type f | sort)
 
 echo ""
 echo "Summary: $active active | $stale stale | $archive_candidates archive candidates | $no_timestamp missing timestamps"
