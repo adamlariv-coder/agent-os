@@ -1,0 +1,7 @@
+# Shell scripts run under bash/WSL and MUST use LF line endings.
+# Without this, core.autocrlf=true rewrites them with CRLF on Windows checkout,
+# which breaks them with `$'\r': command not found` errors.
+*.sh text eol=lf
+
+# Bash-oriented setup/entry scripts (no extension safety net not needed; listed for clarity)
+setup.sh text eol=lf

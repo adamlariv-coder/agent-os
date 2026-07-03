@@ -1,6 +1,17 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "skills": {
+    "resume-evaluation": {
+      "path": "framework/skills/resume-evaluation/SKILL.md",
+      "source": "local",
+      "type": "framework",
+      "version": "1.0.0",
+      "installed": "2026-07-02",
+      "model": "opus",
+      "needs": "WebFetch (URL JDs); Read + pdf/docx skills (document JDs/resumes); scoring-rubric.md; jd-parsing.md",
+      "description": "Evaluate a resume against a specific job description the way a modern ATS + LLM screening stack would. Accepts the JD as text, URL, or document; runs a two-stage evaluation (binary ATS keyword match, then a 7-dimension weighted holistic score); returns a 1–10 composite with per-dimension sub-scores, an ATS match table, and ranked, truthful improvement suggestions across role fit, keywords, seniority, and quantified impact.",
+      "triggers": ["evaluate resume", "score resume", "grade my resume", "rate my resume", "resume evaluation", "ats check", "ats score", "resume vs job description", "match resume to job", "resume keyword match", "resume gap analysis", "screen my resume", "how would a recruiter score this", "tailor resume to role", "is my resume competitive"]
+    },
     "agentignore": {
       "path": "framework/skills/agentignore/SKILL.md",
       "source": "local",
