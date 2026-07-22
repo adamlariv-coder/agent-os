@@ -3,7 +3,7 @@
 # Usage: bash framework/agent/scripts/route.sh "QUERY"
 # Output: one path per line, primary load first
 
-REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 MANIFEST="$REPO_ROOT/personal/agent/routing-manifest.json"
 
 if [ -z "$1" ]; then

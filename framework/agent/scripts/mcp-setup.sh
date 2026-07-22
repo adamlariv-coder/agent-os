@@ -23,7 +23,7 @@
 #   --yes, -y              Non-interactive: skip "press enter" credential gates.
 #   --help, -h             Show this help and exit.
 
-REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 SERVERS_DIR="$REPO_ROOT/framework/mcp/servers"
 CLAUDE_JSON="$HOME/.claude.json"
 

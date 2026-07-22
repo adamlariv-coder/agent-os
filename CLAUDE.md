@@ -28,7 +28,7 @@ Agents: if `uname -s` is not `Linux`, or a script fails with `$'\r'`, `chmod`, o
 **First, resolve the main repo root — you may be running inside a git worktree.**
 
 ```bash
-MAIN_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+MAIN_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 ```
 
 All paths below are relative to `$MAIN_ROOT`. Never use `git rev-parse --show-toplevel` for locating `personal/` — in a worktree it returns the worktree path, not the main repo root.

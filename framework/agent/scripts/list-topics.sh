@@ -5,7 +5,7 @@
 #   list-topics.sh --category ecp     # topics in one category
 #   list-topics.sh --json             # machine-readable output
 
-REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 TOPICS_INDEX="$REPO_ROOT/personal/agent/topics-index.json"
 CATEGORIES="$REPO_ROOT/framework/knowledge/topic-categories.json"
 

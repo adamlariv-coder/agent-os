@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-REPO_ROOT="$(git worktree list --porcelain 2>/dev/null | awk '/^worktree/{print $2; exit}')"
+REPO_ROOT="$(git worktree list --porcelain 2>/dev/null | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 [ -z "${REPO_ROOT:-}" ] && REPO_ROOT="$(git rev-parse --show-toplevel)"
 REGISTRY="$REPO_ROOT/framework/skills/registry.json"
 

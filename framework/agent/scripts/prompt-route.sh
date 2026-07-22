@@ -5,7 +5,7 @@
 # only the matched path lines do. Emits nothing on no-match (keeps cost ~0 on trivial turns).
 set -euo pipefail
 
-ROOT="$(git worktree list --porcelain 2>/dev/null | awk '/^worktree/{print $2; exit}')"
+ROOT="$(git worktree list --porcelain 2>/dev/null | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 [ -z "${ROOT:-}" ] && ROOT="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 MANIFEST="$ROOT/personal/agent/routing-manifest.json"
 [ -f "$MANIFEST" ] || exit 0
