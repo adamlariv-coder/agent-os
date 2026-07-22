@@ -15,7 +15,7 @@ Hard rules that apply in all sessions. These override defaults.
 
 `personal/` lives at the main repo root, not inside a linked worktree. Always resolve it as:
 ```bash
-MAIN_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+MAIN_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 ```
 Never use `git rev-parse --show-toplevel` to locate `personal/`. In a worktree it returns the worktree path — `personal/` won't be there, and startup will incorrectly trigger first-time setup.
 

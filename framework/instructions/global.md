@@ -43,7 +43,7 @@ This rule is non-negotiable. Violations put personal data at risk of being commi
 
 **Worktree awareness**: `personal/` lives at the main repo root, not inside a linked worktree. Always resolve paths using:
 ```bash
-MAIN_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+MAIN_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 ```
 Never use `git rev-parse --show-toplevel` to locate `personal/` — it returns the worktree path in linked worktrees.
 

@@ -3,7 +3,7 @@
 # Usage: find-skill.sh <keyword>
 
 KEYWORD="$1"
-REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 REGISTRY="$REPO_ROOT/framework/skills/registry.json"
 
 if [ -z "$KEYWORD" ]; then

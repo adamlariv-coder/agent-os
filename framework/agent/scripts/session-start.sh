@@ -5,7 +5,7 @@
 # Emits JSON {hookSpecificOutput:{hookEventName,additionalContext}} on stdout.
 set -euo pipefail
 
-ROOT="$(git worktree list --porcelain 2>/dev/null | awk '/^worktree/{print $2; exit}')"
+ROOT="$(git worktree list --porcelain 2>/dev/null | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 [ -z "${ROOT:-}" ] && ROOT="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 
 python3 - "$ROOT" <<'PYEOF'

@@ -2,7 +2,7 @@
 # Quick workspace inventory. Run at session start or any time to get current state.
 # Usage: inventory.sh
 
-REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 
 echo ""
 echo "=== Workspace Inventory ==="

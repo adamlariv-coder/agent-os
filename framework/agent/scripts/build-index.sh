@@ -3,7 +3,7 @@
 # Run after adding/editing any topic file, skill, or framework route.
 # Usage: bash framework/agent/scripts/build-index.sh
 
-REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 TOPICS_DIR="$REPO_ROOT/personal/knowledge/topics"
 TOPICS_INDEX="$REPO_ROOT/personal/agent/topics-index.json"
 KNOWLEDGE_INDEX="$REPO_ROOT/personal/knowledge/INDEX.md"

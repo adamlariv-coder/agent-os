@@ -4,7 +4,7 @@
 
 KEYWORD="$1"
 SCOPE="$2"
-REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 
 if [ -z "$KEYWORD" ]; then
   echo "Usage: find-content.sh <keyword> [--skills|--memory|--knowledge|--instructions]"
