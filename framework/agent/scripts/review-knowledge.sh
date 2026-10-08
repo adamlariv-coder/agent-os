@@ -3,7 +3,7 @@
 # Never auto-archives — output is for Claude to evaluate and act on.
 # Usage: review-knowledge.sh [--stale-days=N] [--archive-days=N]
 
-REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 TOPICS_DIR="$REPO_ROOT/personal/knowledge/topics"
 STALE_DAYS=60
 ARCHIVE_DAYS=90

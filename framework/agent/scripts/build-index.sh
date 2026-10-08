@@ -3,7 +3,7 @@
 # Run after adding/editing any topic file, skill, or framework route.
 # Usage: bash framework/agent/scripts/build-index.sh
 
-REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 TOPICS_DIR="$REPO_ROOT/personal/knowledge/topics"
 TOPICS_INDEX="$REPO_ROOT/personal/agent/topics-index.json"
 KNOWLEDGE_INDEX="$REPO_ROOT/personal/knowledge/INDEX.md"
@@ -29,7 +29,7 @@ personal_registry_path = sys.argv[8]
 def load_categories():
     if not os.path.exists(categories_path):
         return {}
-    with open(categories_path) as f:
+    with open(categories_path, encoding="utf-8") as f:
         return json.load(f).get("categories", {})
 
 categories = load_categories()
@@ -60,7 +60,7 @@ def iter_topic_files(root):
 for rel_path in iter_topic_files(topics_dir):
     fname = os.path.basename(rel_path)
     path = os.path.join(topics_dir, rel_path)
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         raw = f.read()
 
     status  = "unknown"
@@ -120,7 +120,7 @@ for rel_path in iter_topic_files(topics_dir):
         "summary": summary
     }
 
-with open(topics_out, "w") as f:
+with open(topics_out, "w", encoding="utf-8") as f:
     json.dump({"topics": topics}, f, indent=2)
 print(f"topics-index: {len(topics)} topics")
 
@@ -161,7 +161,7 @@ for cat in sorted(grouped.keys(), key=lambda c: (c == "uncategorized", categorie
     index_lines.append("")
 
 os.makedirs(os.path.dirname(knowledge_index_out), exist_ok=True)
-with open(knowledge_index_out, "w") as f:
+with open(knowledge_index_out, "w", encoding="utf-8") as f:
     f.write("\n".join(index_lines))
 print(f"personal knowledge INDEX.md: {len(grouped)} categories")
 
@@ -169,14 +169,14 @@ print(f"personal knowledge INDEX.md: {len(grouped)} categories")
 routes = []
 
 # 2a. Framework routes (static)
-with open(framework_routes_path) as f:
+with open(framework_routes_path, encoding="utf-8") as f:
     fw = json.load(f)
 routes.extend(fw["routes"])
 
 # 2b. Framework skills
 framework_skills = {}
 if os.path.exists(registry_path):
-    with open(registry_path) as f:
+    with open(registry_path, encoding="utf-8") as f:
         framework_registry = json.load(f)
     framework_skills = framework_registry.get("skills", {})
     for name, meta in framework_skills.items():
@@ -193,7 +193,7 @@ if os.path.exists(registry_path):
 # 2c. Personal skills
 personal_skills = {}
 if os.path.exists(personal_registry_path):
-    with open(personal_registry_path) as f:
+    with open(personal_registry_path, encoding="utf-8") as f:
         personal_registry = json.load(f)
     personal_skills = personal_registry.get("skills", {})
     for name, meta in personal_skills.items():
@@ -243,7 +243,7 @@ manifest = {
     "routes": routes
 }
 
-with open(manifest_out, "w") as f:
+with open(manifest_out, "w", encoding="utf-8") as f:
     json.dump(manifest, f, indent=2)
 print(f"routing-manifest: {len(routes)} routes ({len(topics)} topics, {len(framework_skills)} framework skills, {len(personal_skills)} personal skills, {len(fw['routes'])} framework routes)")
 
@@ -277,7 +277,7 @@ for name, meta in sorted(framework_skills.items()):
     lines.append(f"**Last updated**: {meta.get('updated', meta.get('installed','—'))}")
     lines.append("")
 
-with open(index_out, "w") as f:
+with open(index_out, "w", encoding="utf-8") as f:
     f.write("\n".join(lines))
 print(f"framework skills INDEX.md: {len(framework_skills)} skills")
 
@@ -309,7 +309,7 @@ for name, meta in sorted(personal_skills.items()):
     lines.append("")
 
 if os.path.exists(personal_skills_dir):
-    with open(personal_index_out, "w") as f:
+    with open(personal_index_out, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
     print(f"personal skills INDEX.md: {len(personal_skills)} skills")
 PYEOF

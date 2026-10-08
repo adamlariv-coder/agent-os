@@ -23,7 +23,7 @@
 #   --yes, -y              Non-interactive: skip "press enter" credential gates.
 #   --help, -h             Show this help and exit.
 
-REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 SERVERS_DIR="$REPO_ROOT/framework/mcp/servers"
 CLAUDE_JSON="$HOME/.claude.json"
 
@@ -95,12 +95,12 @@ def run(cmd, cwd=None, silent=False):
 
 def load_claude_json():
     if os.path.exists(claude_json):
-        with open(claude_json) as f:
+        with open(claude_json, encoding="utf-8") as f:
             return json.load(f)
     return {}
 
 def save_claude_json(config):
-    with open(claude_json, "w") as f:
+    with open(claude_json, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=2)
 
 def server_src_name(server):

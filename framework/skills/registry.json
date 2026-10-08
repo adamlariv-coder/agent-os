@@ -12,6 +12,17 @@
       "description": "Manages personal/.agentignore — the gitignore-style blocklist that powers the pre-commit personal-context check. The hook blocks any commit that would introduce a flagged term (customer names, personal identifiers, internal product codes) into a non-exempt framework/ file. This skill adds entries, exempts paths, runs on-demand audits, and is cued by upstream skills when a new customer appears.",
       "triggers": ["agentignore", ".agentignore", "context blocklist", "personal context blocklist", "block this term", "add to blocklist", "add to agentignore", "update blocklist", "audit blocklist", "audit context", "check context", "what's in the blocklist", "new customer", "track this customer"]
     },
+    "email-triage": {
+      "path": "framework/skills/email-triage/SKILL.md",
+      "source": "local",
+      "type": "framework",
+      "version": "1.1.1",
+      "installed": "2026-07-31",
+      "model": "sonnet",
+      "needs": "A connected Gmail-like MCP tool in the session (search_threads, get_thread, list_drafts, create_draft, etc.)",
+      "description": "Scans the last ~2 days of unread inbox mail, skips automated/notification/newsletter senders, and creates draft replies (never sends) for threads that genuinely need a personal response, matching the user's own tone from recent sent mail. Also checks the user's own recent showing-feedback requests to other agents and drafts a follow-up nudge for any that went unanswered.",
+      "triggers": ["check my email", "check emails", "triage my inbox", "email triage", "draft email replies", "draft responses", "draft any responses needed", "catch me up on email", "check inbox and draft replies", "go through my emails", "triage emails"]
+    },
     "topic-categories": {
       "path": "framework/skills/topic-categories/SKILL.md",
       "source": "local",

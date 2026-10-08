@@ -3,7 +3,7 @@
 # Checks: manifest exists + all paths valid + all active topics indexed + index count matches disk
 # Usage: bash framework/agent/scripts/validate-indexes.sh
 
-REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')"
+REPO_ROOT="$(git worktree list --porcelain | awk '/^worktree/{sub(/^worktree /,""); print; exit}')"
 TOPICS_DIR="$REPO_ROOT/personal/knowledge/topics"
 TOPICS_INDEX="$REPO_ROOT/personal/agent/topics-index.json"
 CATEGORIES_PATH="$REPO_ROOT/framework/knowledge/topic-categories.json"
